@@ -1,0 +1,6 @@
+date,symbol,side,qty,entry_price,exit_price,fee
+2026-05-01,BTCUSDT,long,0.1,60000,61200,4
+2026-05-02,ETHUSDT,short,1,3100,3000,3
+2026-05-03,BTCUSDT,long,0.1,61500,61000,4
+2026-05-04,SOLUSDT,long,5,145,152,2
+2026-05-05,ETHUSDT,long,1,3050,3120,3
