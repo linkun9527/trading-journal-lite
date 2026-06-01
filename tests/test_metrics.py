@@ -5,7 +5,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from trading_journal.metrics import enrich_trades, summary_stats
+from trading_journal.metrics import calculate_max_drawdown, enrich_trades, summary_stats
 
 
 def test_enrich_trades_calculates_long_pnl():
@@ -71,3 +71,8 @@ def test_summary_stats():
     assert stats["total_trades"] == 2
     assert stats["net_pnl"] == 5
     assert stats["win_rate"] == 50.0
+
+def test_calculate_max_drawdown():
+    equity_curve = pd.Series([10, 15, 5, 20, 12])
+
+    assert calculate_max_drawdown(equity_curve) == -10
