@@ -27,11 +27,12 @@ except Exception as exc:
     st.error(f"Failed to process file: {exc}")
     st.stop()
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("Net PnL", stats["net_pnl"])
 col2.metric("Win Rate", f'{stats["win_rate"]}%')
 col3.metric("Avg PnL", stats["avg_pnl"])
 col4.metric("Profit Factor", stats["profit_factor"])
+col5.metric("Max Drawdown", stats["max_drawdown"])
 
 st.subheader("Equity Curve")
 fig = px.line(trades, x="date", y="equity_curve", markers=True)
