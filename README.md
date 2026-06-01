@@ -24,3 +24,16 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Run the app:
+
+```bash
+streamlit run app.py
+```
+## 提交
+
+底部提交信息填：
+
+```text
+Fix README code blocks
