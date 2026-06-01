@@ -72,6 +72,7 @@ def test_summary_stats():
     assert stats["net_pnl"] == 5
     assert stats["win_rate"] == 50.0
 
+
 def test_calculate_max_drawdown():
     equity_curve = pd.Series([10, 15, 5, 20, 12])
 
