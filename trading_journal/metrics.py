@@ -17,6 +17,16 @@ def calculate_pnl(row: pd.Series) -> float:
     raise ValueError(f"Unsupported side: {side}")
 
 
+def calculate_max_drawdown(equity_curve: pd.Series) -> float:
+    if equity_curve.empty:
+        return 0.0
+
+    running_peak = equity_curve.cummax()
+    drawdown = equity_curve - running_peak
+
+    return round(drawdown.min(), 2)
+
+
 def enrich_trades(df: pd.DataFrame) -> pd.DataFrame:
     required = {"date", "symbol", "side", "qty", "entry_price", "exit_price"}
     missing = required - set(df.columns)
@@ -51,4 +61,5 @@ def summary_stats(df: pd.DataFrame) -> dict:
         "profit_factor": round(gross_profit / gross_loss, 2) if gross_loss else None,
         "best_trade": round(enriched["pnl"].max(), 2) if total_trades else 0,
         "worst_trade": round(enriched["pnl"].min(), 2) if total_trades else 0,
+        "max_drawdown": calculate_max_drawdown(enriched["equity_curve"]),
     }
