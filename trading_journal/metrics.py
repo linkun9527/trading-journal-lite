@@ -43,6 +43,33 @@ def enrich_trades(df: pd.DataFrame) -> pd.DataFrame:
     return result
 
 
+def aggregate_pnl_by_period(df: pd.DataFrame, period: str) -> pd.DataFrame:
+    enriched = enrich_trades(df)
+
+    if period not in {"D", "W"}:
+        raise ValueError("period must be either 'D' for daily or 'W' for weekly")
+
+    result = (
+        enriched
+        .set_index("date")
+        .resample(period)["pnl"]
+        .sum()
+        .reset_index()
+    )
+
+    result["pnl"] = result["pnl"].round(2)
+
+    return result
+
+
+def daily_pnl(df: pd.DataFrame) -> pd.DataFrame:
+    return aggregate_pnl_by_period(df, "D")
+
+
+def weekly_pnl(df: pd.DataFrame) -> pd.DataFrame:
+    return aggregate_pnl_by_period(df, "W")
+
+
 def summary_stats(df: pd.DataFrame) -> dict:
     enriched = enrich_trades(df)
 
