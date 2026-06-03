@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 
 from trading_journal.loaders import load_trades_from_csv
-from trading_journal.metrics import enrich_trades, summary_stats
+from trading_journal.metrics import daily_pnl, enrich_trades, summary_stats, weekly_pnl
 
 
 st.set_page_config(
@@ -42,6 +42,16 @@ st.subheader("PnL by Symbol")
 symbol_pnl = trades.groupby("symbol", as_index=False)["pnl"].sum()
 fig2 = px.bar(symbol_pnl, x="symbol", y="pnl")
 st.plotly_chart(fig2, use_container_width=True)
+
+st.subheader("Daily PnL")
+daily = daily_pnl(raw_df)
+fig3 = px.bar(daily, x="date", y="pnl")
+st.plotly_chart(fig3, use_container_width=True)
+
+st.subheader("Weekly PnL")
+weekly = weekly_pnl(raw_df)
+fig4 = px.bar(weekly, x="date", y="pnl")
+st.plotly_chart(fig4, use_container_width=True)
 
 st.subheader("Trades")
 st.dataframe(trades, use_container_width=True)
