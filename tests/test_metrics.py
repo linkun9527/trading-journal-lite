@@ -1,10 +1,12 @@
 import sys
+from io import StringIO
 from pathlib import Path
 
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from trading_journal.loaders import load_binance_futures_csv
 from trading_journal.metrics import (
     calculate_max_drawdown,
     daily_pnl,
@@ -150,3 +152,26 @@ def test_weekly_pnl():
 
     assert len(result) == 1
     assert result.iloc[0]["pnl"] == 5
+
+
+def test_load_binance_futures_csv():
+    csv_data = StringIO(
+        """Date,Symbol,Side,Quantity,Entry Price,Exit Price,Fee
+2026-05-01,BTCUSDT,LONG,0.1,60000,61200,4
+2026-05-02,ETHUSDT,SHORT,1,3100,3000,3
+"""
+    )
+
+    result = load_binance_futures_csv(csv_data)
+
+    assert list(result.columns) == [
+        "date",
+        "symbol",
+        "side",
+        "qty",
+        "entry_price",
+        "exit_price",
+        "fee",
+    ]
+    assert result.iloc[0]["side"] == "long"
+    assert result.iloc[1]["side"] == "short"
