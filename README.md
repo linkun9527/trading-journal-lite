@@ -1,39 +1,29 @@
 # Trading Journal Lite
 
-Trading Journal Lite is a lightweight local-first trading journal for CSV-based trade review.
+Trading Journal Lite 是一个轻量级、本地优先的交易日志工具，用于通过 CSV 文件复盘交易记录。
 
-It helps traders import trade records, calculate core performance metrics, and visualize trading results with a simple Streamlit dashboard.
+它可以帮助交易员导入交易记录，计算核心绩效指标，并通过 Streamlit 仪表盘可视化交易结果。
 
-## Features
+## 功能
 
-- CSV trade import
-- Long and short PnL calculation
-- Net PnL
-- Win rate
-- Average PnL
-- Profit factor
-- Best and worst trade
-- Equity curve visualization
-- PnL by symbol
-- Unit tests
-- GitHub Actions workflow
+- CSV 交易记录导入
+- Binance Futures CSV 导入
+- 多单和空单 PnL 计算
+- 净盈亏
+- 胜率
+- 平均 PnL
+- 盈亏比
+- 最大回撤
+- 每日和每周 PnL 汇总
+- 最佳和最差交易
+- 资金曲线可视化
+- 按交易品种统计 PnL
+- 单元测试
+- GitHub Actions 自动测试
 
-## Quick Start
+## 快速开始
 
-Install dependencies:
+安装依赖：
 
 ```bash
 pip install -r requirements.txt
-```
-
-Run the app:
-
-```bash
-streamlit run app.py
-```
-## 提交
-
-底部提交信息填：
-
-```text
-Fix README code blocks
