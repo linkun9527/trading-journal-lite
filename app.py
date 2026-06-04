@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 
-from trading_journal.loaders import load_trades_from_csv
+from trading_journal.loaders import load_binance_futures_csv, load_trades_from_csv
 from trading_journal.metrics import daily_pnl, enrich_trades, summary_stats, weekly_pnl
 
 
@@ -13,6 +13,11 @@ st.set_page_config(
 st.title("Trading Journal Lite")
 st.caption("A lightweight local trading journal for CSV-based trade review.")
 
+csv_format = st.selectbox(
+    "CSV format",
+    ["Standard", "Binance Futures"],
+)
+
 uploaded_file = st.file_uploader("Upload your trades CSV", type=["csv"])
 
 if uploaded_file is None:
@@ -20,6 +25,9 @@ if uploaded_file is None:
     st.stop()
 
 try:
+if csv_format == "Binance Futures":
+    raw_df = load_binance_futures_csv(uploaded_file)
+else:
     raw_df = load_trades_from_csv(uploaded_file)
     trades = enrich_trades(raw_df)
     stats = summary_stats(raw_df)
