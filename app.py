@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 
 from trading_journal.loaders import load_binance_futures_csv, load_bybit_csv, load_trades_from_csv
-from trading_journal.metrics import daily_pnl, enrich_trades, summary_stats, weekly_pnl
+from trading_journal.metrics import daily_pnl, enrich_trades, pnl_by_tag, summary_stats, weekly_pnl
 
 
 st.set_page_config(
@@ -25,12 +25,13 @@ if uploaded_file is None:
     st.stop()
 
 try:
-if csv_format == "Binance Futures":
-    raw_df = load_binance_futures_csv(uploaded_file)
-elif csv_format == "Bybit":
-    raw_df = load_bybit_csv(uploaded_file)
-else:
-    raw_df = load_trades_from_csv(uploaded_file)
+    if csv_format == "Binance Futures":
+        raw_df = load_binance_futures_csv(uploaded_file)
+    elif csv_format == "Bybit":
+        raw_df = load_bybit_csv(uploaded_file)
+    else:
+        raw_df = load_trades_from_csv(uploaded_file)
+
     trades = enrich_trades(raw_df)
     stats = summary_stats(raw_df)
 except Exception as exc:
@@ -52,6 +53,11 @@ st.subheader("PnL by Symbol")
 symbol_pnl = trades.groupby("symbol", as_index=False)["pnl"].sum()
 fig2 = px.bar(symbol_pnl, x="symbol", y="pnl")
 st.plotly_chart(fig2, use_container_width=True)
+
+st.subheader("PnL by Tag")
+tag_pnl = pnl_by_tag(raw_df)
+fig_tag = px.bar(tag_pnl, x="tag", y="pnl")
+st.plotly_chart(fig_tag, use_container_width=True)
 
 st.subheader("Daily PnL")
 daily = daily_pnl(raw_df)
