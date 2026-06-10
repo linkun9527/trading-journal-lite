@@ -19,6 +19,7 @@ Trading Journal Lite 是一个轻量级、本地优先的交易日志工具，�
 - 最佳和最差交易
 - 资金曲线可视化
 - 按交易品种统计 PnL
+- 交易标签分类与按标签统计 PnL
 - 单元测试
 - GitHub Actions 自动测试
 
@@ -49,14 +50,19 @@ streamlit run app.py
 | entry_price | 是 | 开仓价格 |
 | exit_price | 是 | 平仓价格 |
 | fee | 否 | 手续费 |
+| tag | 否 | 交易标签 |
 
 示例：
 
 ```csv
-date,symbol,side,qty,entry_price,exit_price,fee
-2026-05-01,BTCUSDT,long,0.1,60000,61200,4
-2026-05-02,ETHUSDT,short,1,3100,3000,3
+date,symbol,side,qty,entry_price,exit_price,fee,tag
+2026-05-01,BTCUSDT,long,0.1,60000,61200,4,breakout
+2026-05-02,ETHUSDT,short,1,3100,3000,3,pullback
 ```
+
+## 交易标签
+
+用户可以在 Standard CSV 中添加可选的 `tag` 列，用于给交易分类，例如 `breakout`、`pullback`、`news`、`scalp` 或 `manual`。如果没有提供 `tag` 列，或某笔交易的标签为空，系统会自动使用 `untagged`。
 
 ## 支持的导入格式
 
@@ -127,7 +133,7 @@ sample_trades.csv
 - [x] 添加 Binance Futures CSV 解析器
 - [x] 添加 Bybit CSV 解析器
 - [ ] 添加 OKX CSV 解析器
-- [ ] 添加交易标签
+- [x] 添加交易标签
 - [ ] 添加每笔交易备注
 - [ ] 添加可导出的 HTML 报告
 - [ ] 添加更多风险指标

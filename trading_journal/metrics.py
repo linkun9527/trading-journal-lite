@@ -1,5 +1,7 @@
 import pandas as pd
 
+from trading_journal.loaders import normalize_tag_column
+
 
 def calculate_pnl(row: pd.Series) -> float:
     side = str(row["side"]).lower()
@@ -37,8 +39,24 @@ def enrich_trades(df: pd.DataFrame) -> pd.DataFrame:
     result = df.copy()
     result["date"] = pd.to_datetime(result["date"])
     result["fee"] = result.get("fee", 0)
+    result = normalize_tag_column(result)
     result["pnl"] = result.apply(calculate_pnl, axis=1)
     result["equity_curve"] = result["pnl"].cumsum()
+
+    return result
+
+
+def pnl_by_tag(df: pd.DataFrame) -> pd.DataFrame:
+    enriched = enrich_trades(df)
+
+    result = (
+        enriched
+        .groupby("tag", as_index=False)["pnl"]
+        .sum()
+        .sort_values("pnl", ascending=False)
+        .reset_index(drop=True)
+    )
+    result["pnl"] = result["pnl"].round(2)
 
     return result
 

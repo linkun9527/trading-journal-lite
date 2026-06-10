@@ -34,12 +34,28 @@ BYBIT_COLUMN_MAP = {
 
 
 def load_trades_from_csv(file) -> pd.DataFrame:
-    return pd.read_csv(file)
+    raw = pd.read_csv(file)
+    normalized = normalize_standard_columns(raw)
+
+    return normalize_tag_column(normalized)
 
 
 def normalize_standard_columns(df: pd.DataFrame) -> pd.DataFrame:
     result = df.copy()
     result.columns = [str(column).strip() for column in result.columns]
+    return result
+
+
+def normalize_tag_column(df: pd.DataFrame) -> pd.DataFrame:
+    result = df.copy()
+
+    if "tag" not in result.columns:
+        result["tag"] = "untagged"
+        return result
+
+    tags = result["tag"].fillna("untagged").astype(str).str.strip()
+    result["tag"] = tags.mask(tags == "", "untagged")
+
     return result
 
 
@@ -68,6 +84,7 @@ def load_binance_futures_csv(file) -> pd.DataFrame:
 
     result["side"] = result["side"].apply(_normalize_side)
     result["fee"] = result["fee"].fillna(0)
+    result["tag"] = "untagged"
 
     return result
 
@@ -85,5 +102,6 @@ def load_bybit_csv(file) -> pd.DataFrame:
 
     result["side"] = result["side"].apply(_normalize_side)
     result["fee"] = result["fee"].fillna(0)
+    result["tag"] = "untagged"
 
     return result
